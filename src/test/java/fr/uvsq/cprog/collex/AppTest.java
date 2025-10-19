@@ -3,8 +3,9 @@ package fr.uvsq.cprog.collex;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
-import java.io.FileWriter;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.Scanner;
 
 import org.junit.Test;
 
@@ -103,5 +104,34 @@ public class AppTest {
         Commande cmd = tui.nextCommande("exit");
         String out = cmd.execute();
         assertEquals("Au revoir", out);
+    }
+
+    @Test
+    public void DnsAppTest() throws Exception {
+        File db = makeDb("a.example.com 1.2.3.4\nb.example.com 10.0.0.1\n");
+        Dns dns = new Dns(db.getAbsolutePath());
+
+        String script = String.join("\n", "a.example.com", "1.2.3.4", "ls example.com", "exit") + "\n";
+        Scanner sc = new Scanner(new ByteArrayInputStream(script.getBytes(StandardCharsets.UTF_8)));
+
+        PrintStream oldOut = System.out;
+        ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(bout, true, StandardCharsets.UTF_8));
+
+        try {
+            DnsApp app = new DnsApp(dns);
+            app.run(sc);
+
+            String out = bout.toString(StandardCharsets.UTF_8);
+
+            assertTrue(out.contains("1.2.3.4"));
+            assertTrue(out.contains("a.example.com"));
+            assertTrue(out.contains("a.example.com 1.2.3.4"));
+            assertTrue(out.contains("b.example.com 10.0.0.1"));
+            assertTrue(out.contains("Au revoir"));
+        } finally {
+            System.setOut(oldOut);
+            sc.close();
+        }
     }
 }
