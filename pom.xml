@@ -46,7 +46,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>fr.uvsq.cprog.mvnjunit.ChaineCryptee</mainClass>
+              <mainClass>fr.uvsq.cprog.collex.DnsApp</mainClass>
             </manifest>
           </archive>
         </configuration>
@@ -62,7 +62,7 @@
           </descriptorRefs>
           <archive>
             <manifest>
-              <mainClass>fr.uvsq.cprog.mvnjunit.ChaineCryptee</mainClass>
+              <mainClass>fr.uvsq.cprog.collex.DnsApp</mainClass>
             </manifest>
           </archive>
         </configuration>
